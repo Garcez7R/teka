@@ -37,12 +37,22 @@ queryClient.getMutationCache().subscribe(event => {
   }
 });
 
+const getTrpcUrl = () => {
+  try {
+    if (typeof window === 'undefined') return '/api/trpc';
+    const origin = window.location.origin;
+    if (!origin) return '/api/trpc';
+    return `${origin}/api/trpc`;
+  } catch (e) {
+    console.error('[tRPC URL Error]', e);
+    return '/api/trpc';
+  }
+};
+
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: typeof window !== 'undefined' 
-        ? `${window.location.origin}/api/trpc`
-        : '/api/trpc',
+      url: getTrpcUrl(),
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {
