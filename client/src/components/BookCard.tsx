@@ -49,7 +49,7 @@ export default function BookCard({ id, title, category, price, sebo, condition }
           
           <div className="flex items-center gap-2 text-gray-600">
             <span className="text-xs font-inter bg-gray-100 px-2 py-1 rounded">{category}</span>
-            <span className="text-xs font-inter px-2 py-1 rounded bg-[#da4653] bg-opacity-10 text-[#da4653] font-semibold">{condition}</span>
+            <span className="text-xs font-inter px-2 py-1 rounded bg-[#da4653] text-white font-semibold">{condition}</span>
           </div>
 
           <div className="flex items-center gap-1 text-gray-700 text-sm font-inter">

@@ -75,7 +75,7 @@ export default function Book() {
               <span className="text-xs font-inter bg-gray-100 px-3 py-1 rounded text-gray-700">
                 {book.category}
               </span>
-              <span className="text-xs font-inter bg-[#da4653] bg-opacity-10 px-3 py-1 rounded text-[#da4653] font-semibold">
+              <span className="text-xs font-inter bg-[#da4653] px-3 py-1 rounded text-white font-semibold">
                 {book.condition}
               </span>
             </div>
