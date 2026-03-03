@@ -1,12 +1,16 @@
 import { useState, useMemo } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import BookCard from "@/components/BookCard";
 import Footer from "@/components/Footer";
 import booksData from "@/data/books.json";
 import { Filter } from "lucide-react";
+import { getLoginUrl } from "@/const";
 
 export default function Home() {
+  const { user, isAuthenticated } = useAuth();
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSebo, setSelectedSebo] = useState<string | null>(null);
@@ -47,6 +51,17 @@ export default function Home() {
           <div className="max-w-2xl">
             <SearchBar onSearch={setSearchQuery} />
           </div>
+
+          {!isAuthenticated && (
+            <div className="mt-6">
+              <a
+                href={getLoginUrl()}
+                className="inline-block bg-[#da4653] hover:bg-[#c23a45] text-white font-outfit font-bold py-2 px-6 rounded-lg transition-colors"
+              >
+                Fazer Login
+              </a>
+            </div>
+          )}
         </div>
       </section>
 

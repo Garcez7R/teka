@@ -21,6 +21,9 @@ export default function Header() {
           <Link href="/about" className="text-gray-700 hover:text-[#262969] transition-colors font-inter text-sm font-medium">
             Sobre
           </Link>
+          <Link href="/add-book" className="bg-[#da4653] hover:bg-[#c23a45] text-white px-4 py-2 rounded-lg transition-colors font-inter text-sm font-medium">
+            Cadastrar Livro
+          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
