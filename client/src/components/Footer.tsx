@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="font-outfit font-bold text-lg mb-2">TEKA</h3>
+            <h3 className="font-outfit font-bold text-lg mb-2"><span className="text-[#da4653]">TEKA</span></h3>
             <p className="font-inter text-sm text-gray-300">
               Marketplace de livros usados. Encontre, busque e compre com segurança.
             </p>

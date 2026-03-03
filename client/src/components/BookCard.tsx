@@ -1,5 +1,6 @@
 import { Link } from "wouter";
-import { BookOpen, MapPin } from "lucide-react";
+import { BookOpen, MapPin, Heart } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 interface BookCardProps {
   id: number;
@@ -11,9 +12,31 @@ interface BookCardProps {
 }
 
 export default function BookCard({ id, title, category, price, sebo, condition }: BookCardProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(id);
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(id);
+  };
+
   return (
-    <Link href={`/book/${id}`}>
-      <div className="group cursor-pointer">
+    <div className="group cursor-pointer relative">
+      {/* Botão de favorito */}
+      <button
+        onClick={handleFavoriteClick}
+        className="absolute top-2 right-2 z-10 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all"
+        title={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      >
+        <Heart
+          className={`w-5 h-5 transition-colors ${
+            favorited ? "fill-[#da4653] text-[#da4653]" : "text-gray-400 hover:text-[#da4653]"
+          }`}
+        />
+      </button>
+
+      <Link href={`/book/${id}`}>
         <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6 h-64 flex flex-col items-center justify-center border border-gray-200 group-hover:border-[#da4653] group-hover:shadow-lg transition-all duration-300">
           <BookOpen className="w-16 h-16 text-[#262969] mb-4 group-hover:scale-110 transition-transform" />
           <p className="text-gray-600 text-sm font-inter">Visualizar detalhes</p>
@@ -26,7 +49,7 @@ export default function BookCard({ id, title, category, price, sebo, condition }
           
           <div className="flex items-center gap-2 text-gray-600">
             <span className="text-xs font-inter bg-gray-100 px-2 py-1 rounded">{category}</span>
-            <span className="text-xs font-inter px-2 py-1 rounded bg-blue-50 text-[#262969]">{condition}</span>
+            <span className="text-xs font-inter px-2 py-1 rounded bg-[#da4653] bg-opacity-10 text-[#da4653] font-semibold">{condition}</span>
           </div>
 
           <div className="flex items-center gap-1 text-gray-700 text-sm font-inter">
@@ -40,7 +63,7 @@ export default function BookCard({ id, title, category, price, sebo, condition }
             </span>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

@@ -7,14 +7,14 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Book from "./pages/Book";
 import About from "./pages/About";
-import AddBook from "./pages/AddBook";
+
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/book/:id" component={Book} />
-      <Route path="/add-book" component={AddBook} />
+
       <Route path="/about" component={About} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

@@ -2,11 +2,14 @@ import { useParams, Link } from "wouter";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import booksData from "@/data/books.json";
-import { BookOpen, MapPin, Calendar, FileText, MessageCircle, ArrowLeft } from "lucide-react";
+import { BookOpen, MapPin, Calendar, FileText, MessageCircle, ArrowLeft, Heart } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Book() {
   const { id } = useParams<{ id: string }>();
   const book = booksData.find(b => b.id === parseInt(id || "0"));
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const favorited = isFavorite(parseInt(id || "0"));
 
   if (!book) {
     return (
@@ -43,9 +46,22 @@ export default function Book() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Book Image Placeholder */}
           <div className="md:col-span-1">
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-12 flex flex-col items-center justify-center border border-gray-200 sticky top-24">
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-12 flex flex-col items-center justify-center border border-gray-200 sticky top-24 relative">
               <BookOpen className="w-24 h-24 text-[#262969] mb-4" />
               <p className="text-gray-600 text-sm font-inter text-center">Capa do livro</p>
+              
+              {/* Botão de favorito na imagem */}
+              <button
+                onClick={() => toggleFavorite(book.id)}
+                className="absolute top-4 right-4 p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-all"
+                title={favorited ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+              >
+                <Heart
+                  className={`w-6 h-6 transition-colors ${
+                    favorited ? "fill-[#da4653] text-[#da4653]" : "text-gray-400 hover:text-[#da4653]"
+                  }`}
+                />
+              </button>
             </div>
           </div>
 
@@ -59,7 +75,7 @@ export default function Book() {
               <span className="text-xs font-inter bg-gray-100 px-3 py-1 rounded text-gray-700">
                 {book.category}
               </span>
-              <span className="text-xs font-inter bg-blue-50 px-3 py-1 rounded text-[#262969]">
+              <span className="text-xs font-inter bg-[#da4653] bg-opacity-10 px-3 py-1 rounded text-[#da4653] font-semibold">
                 {book.condition}
               </span>
             </div>
@@ -75,61 +91,83 @@ export default function Book() {
             {/* Description */}
             <div className="mb-8 pb-8 border-b border-gray-200">
               <h2 className="font-outfit font-semibold text-lg text-[#262969] mb-3">Descrição</h2>
-              <p className="font-inter text-gray-700 leading-relaxed">
+              <p className="font-inter text-gray-700 leading-relaxed text-base">
                 {book.description}
               </p>
             </div>
 
-            {/* Details */}
+            {/* Details Grid */}
             <div className="grid grid-cols-2 gap-6 mb-8 pb-8 border-b border-gray-200">
               <div>
-                <p className="font-inter text-sm text-gray-600 mb-1">ISBN</p>
-                <p className="font-inter font-semibold text-gray-900">{book.isbn}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <FileText className="w-4 h-4 text-[#da4653]" />
+                  <p className="font-inter text-sm text-gray-600">ISBN</p>
+                </div>
+                <p className="font-inter font-semibold text-gray-900 ml-6">{book.isbn}</p>
               </div>
               <div>
-                <p className="font-inter text-sm text-gray-600 mb-1">Páginas</p>
-                <p className="font-inter font-semibold text-gray-900">{book.pages}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <BookOpen className="w-4 h-4 text-[#da4653]" />
+                  <p className="font-inter text-sm text-gray-600">Páginas</p>
+                </div>
+                <p className="font-inter font-semibold text-gray-900 ml-6">{book.pages}</p>
               </div>
               <div>
-                <p className="font-inter text-sm text-gray-600 mb-1">Ano de Publicação</p>
-                <p className="font-inter font-semibold text-gray-900">{book.year}</p>
+                <div className="flex items-center gap-2 mb-2">
+                  <Calendar className="w-4 h-4 text-[#da4653]" />
+                  <p className="font-inter text-sm text-gray-600">Ano de Publicação</p>
+                </div>
+                <p className="font-inter font-semibold text-gray-900 ml-6">{book.year}</p>
               </div>
               <div>
-                <p className="font-inter text-sm text-gray-600 mb-1">Condição</p>
+                <p className="font-inter text-sm text-gray-600 mb-2">Condição</p>
                 <p className="font-inter font-semibold text-gray-900">{book.condition}</p>
               </div>
             </div>
 
             {/* Seller Info */}
-            <div className="bg-gray-50 rounded-lg p-6 mb-8 border border-gray-200">
-              <h3 className="font-outfit font-semibold text-lg text-[#262969] mb-4">Informações do Sebo</h3>
+            <div className="bg-gradient-to-br from-[#da4653] to-[#c23a45] rounded-lg p-6 mb-8 border border-[#da4653] text-white">
+              <h3 className="font-outfit font-semibold text-lg mb-4">Informações do Sebo</h3>
               <div className="flex items-center gap-3 mb-6">
-                <MapPin className="w-5 h-5 text-[#da4653]" />
+                <MapPin className="w-5 h-5" />
                 <div>
-                  <p className="font-inter text-sm text-gray-600">Sebo</p>
-                  <p className="font-inter font-semibold text-gray-900">{book.sebo}</p>
+                  <p className="font-inter text-sm opacity-90">Sebo</p>
+                  <p className="font-inter font-semibold text-base">{book.sebo}</p>
                 </div>
               </div>
-              <p className="font-inter text-sm text-gray-600 mb-3">
-                Entre em contato diretamente via WhatsApp para confirmar disponibilidade e negociar.
+              <p className="font-inter text-sm opacity-90">
+                Entre em contato diretamente via WhatsApp para confirmar disponibilidade e negociar o melhor preço.
               </p>
             </div>
 
-            {/* CTA Button */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-[#da4653] hover:bg-[#c23a45] text-white font-outfit font-bold py-4 px-6 rounded-lg transition-colors"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Contatar via WhatsApp
-            </a>
+            {/* CTA Buttons */}
+            <div className="flex flex-col gap-3 mb-8">
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full bg-[#da4653] hover:bg-[#c23a45] text-white font-outfit font-bold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Contatar via WhatsApp
+              </a>
+              <button
+                onClick={() => toggleFavorite(book.id)}
+                className={`flex items-center justify-center gap-2 w-full font-outfit font-bold py-3 px-6 rounded-lg transition-all border-2 ${
+                  favorited
+                    ? "bg-[#da4653] border-[#da4653] text-white"
+                    : "bg-white border-[#da4653] text-[#da4653] hover:bg-[#da4653] hover:text-white"
+                }`}
+              >
+                <Heart className={`w-5 h-5 ${favorited ? "fill-current" : ""}`} />
+                {favorited ? "Remover dos Favoritos" : "Adicionar aos Favoritos"}
+              </button>
+            </div>
 
             {/* Additional Info */}
-            <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
               <p className="font-inter text-sm text-blue-900">
-                <span className="font-semibold">Dica:</span> Confirme a disponibilidade antes de se deslocar até o sebo.
+                <span className="font-semibold">💡 Dica:</span> Confirme a disponibilidade antes de se deslocar até o sebo. Muitos livros são vendidos rapidamente!
               </p>
             </div>
           </div>

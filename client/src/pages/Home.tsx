@@ -1,20 +1,18 @@
 import { useState, useMemo } from "react";
-import { useAuth } from "@/_core/hooks/useAuth";
 import Header from "@/components/Header";
 import SearchBar from "@/components/SearchBar";
 import BookCard from "@/components/BookCard";
 import Footer from "@/components/Footer";
 import booksData from "@/data/books.json";
-import { Filter } from "lucide-react";
-import { getLoginUrl } from "@/const";
+import { Filter, Heart } from "lucide-react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export default function Home() {
-  const { user, isAuthenticated } = useAuth();
-  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSebo, setSelectedSebo] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const { getFavoriteCount } = useFavorites();
 
   // Get unique categories and sebos
   const categories = useMemo(() => Array.from(new Set(booksData.map(b => b.category))), []);
@@ -51,33 +49,30 @@ export default function Home() {
           <div className="max-w-2xl">
             <SearchBar onSearch={setSearchQuery} />
           </div>
-
-          {!isAuthenticated && (
-            <div className="mt-6">
-              <a
-                href={getLoginUrl()}
-                className="inline-block bg-[#da4653] hover:bg-[#c23a45] text-white font-outfit font-bold py-2 px-6 rounded-lg transition-colors"
-              >
-                Fazer Login
-              </a>
-            </div>
-          )}
         </div>
       </section>
 
       {/* Main Content */}
       <main className="container flex-1 py-12">
         {/* Filters Section */}
-        <div className="mb-8">
+        <div className="mb-8 flex gap-3 flex-wrap">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-inter text-sm font-medium text-gray-700"
+            className="flex items-center gap-2 px-4 py-2 border-2 border-[#da4653] rounded-lg hover:bg-[#da4653] hover:text-white transition-colors font-inter text-sm font-medium text-[#da4653]"
           >
             <Filter className="w-4 h-4" />
             Filtros
           </button>
+          <button
+            className="flex items-center gap-2 px-4 py-2 border-2 border-[#262969] rounded-lg hover:bg-[#262969] hover:text-white transition-colors font-inter text-sm font-medium text-[#262969]"
+            title="Ver livros favoritos"
+          >
+            <Heart className="w-4 h-4" />
+            Favoritos ({getFavoriteCount()})
+          </button>
+        </div>
 
-          {showFilters && (
+        {showFilters && (
             <div className="mt-4 p-6 bg-gray-50 rounded-lg border border-gray-200">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Category Filter */}
@@ -142,7 +137,6 @@ export default function Home() {
               </div>
             </div>
           )}
-        </div>
 
         {/* Results Count */}
         <div className="mb-6">
